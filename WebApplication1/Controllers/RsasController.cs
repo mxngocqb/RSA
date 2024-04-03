@@ -44,6 +44,7 @@ namespace WebApplication1.Controllers
         }
 
         // GET: api/Rsas
+        [EnableCors("AllowAnyOrigin")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Rsa>>> GetData()
         {
@@ -51,6 +52,7 @@ namespace WebApplication1.Controllers
         }
 
         // GET: api/Rsas/5
+        [EnableCors("AllowAnyOrigin")]
         [HttpGet("{id}")]
         public async Task<ActionResult<Rsa>> GetRsa(int id)
         {
@@ -67,6 +69,7 @@ namespace WebApplication1.Controllers
 
         // PUT: api/Rsas/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [EnableCors("AllowAnyOrigin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutRsa(int id, Rsa rsa)
         {
@@ -98,6 +101,7 @@ namespace WebApplication1.Controllers
 
         // POST: api/Rsas
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [EnableCors("AllowAnyOrigin")]
         [HttpPost]
         public async Task<ActionResult<Rsa>> PostRsa(Rsa rsa)
         {
