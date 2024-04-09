@@ -16,4 +16,4 @@ This repository contains a backend application developed in .NET 8 for handling 
 Begin by cloning this repository to your local machine.
 
 ```bash
-git clone https://github.com/your-username/your-repository.git
+git clone https://github.com/mxngocqb/RSA.git
