@@ -14,6 +14,6 @@ namespace WebApplication1.Data
         {
         }
 
-        public DbSet<WebApplication1.Models.Rsa> Data { get; set; } = default!;
+        public DbSet<WebApplication1.Models.NavMessage> NavMessage { get; set; } = default!;
     }
 }

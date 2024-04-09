@@ -4,7 +4,6 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +14,7 @@ namespace WebApplication1.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RsasController : ControllerBase
+    public class NavMessagesController : ControllerBase
     {
         // Public and private keys (from your previous output)
         RSAParameters publicKey = new RSAParameters
@@ -35,50 +34,47 @@ namespace WebApplication1.Controllers
             DQ = Convert.FromBase64String("ex0MSE0u+vNFoTc/+NAIaGMTg4JUZdEmPzMbe6SrFqtrfvyXelLBP67PjWr41pCENZQRcDYlyIYZST2/d/0dyQ=="),
             InverseQ = Convert.FromBase64String("NRsBBn1YQcazRsdIHdlOazszZX8P3f9yZcCpFGl3l5Dz750O3zoQtbyI2fbhq9zdNoI/TiIRCPa5xMAljCiG/g==")
         };
-
         private readonly WebApplication1Context _context;
 
-        public RsasController(WebApplication1Context context)
+        public NavMessagesController(WebApplication1Context context)
         {
             _context = context;
         }
 
-        // GET: api/Rsas
-        [EnableCors("AllowAnyOrigin")]
+        // GET: api/NavMessages
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Rsa>>> GetData()
+        public async Task<ActionResult<IEnumerable<NavMessage>>> GetNavMessage()
         {
-            return await _context.Data.ToListAsync();
+            return await _context.NavMessage.ToListAsync();
         }
 
-        // GET: api/Rsas/5
-        [EnableCors("AllowAnyOrigin")]
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Rsa>> GetRsa(int id)
+        // GET: api/NavMessages/4/2039/1
+        [HttpGet("{svId}/{week}/{tow}")]
+        public async Task<ActionResult<NavMessage>> GetNavMessage(int svId, int week, int tow)
         {
-            var rsa = await _context.Data.FindAsync(id);
-          
+            var navMessage = await _context.NavMessage
+                 .FirstOrDefaultAsync(n => n.SvId == svId && n.Week == week && n.Tow == tow);
+            
 
-            if (rsa == null)
+            if (navMessage == null)
             {
                 return NotFound();
             }
 
-             return rsa;
+            return navMessage;
         }
 
-        // PUT: api/Rsas/5
+        // PUT: api/NavMessages/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [EnableCors("AllowAnyOrigin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRsa(int id, Rsa rsa)
+        public async Task<IActionResult> PutNavMessage(int id, NavMessage navMessage)
         {
-            if (id != rsa.Id)
+            if (id != navMessage.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(rsa).State = EntityState.Modified;
+            _context.Entry(navMessage).State = EntityState.Modified;
 
             try
             {
@@ -86,7 +82,7 @@ namespace WebApplication1.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!RsaExists(id))
+                if (!NavMessageExists(id))
                 {
                     return NotFound();
                 }
@@ -99,40 +95,39 @@ namespace WebApplication1.Controllers
             return NoContent();
         }
 
-        // POST: api/Rsas
+        // POST: api/NavMessages
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [EnableCors("AllowAnyOrigin")]
         [HttpPost]
-        public async Task<ActionResult<Rsa>> PostRsa(Rsa rsa)
+        public async Task<ActionResult<NavMessage>> PostNavMessage(NavMessage navMessage)
         {
-            byte[] dataBytes = Encoding.UTF8.GetBytes(rsa.Value);
+            byte[] dataBytes = Encoding.UTF8.GetBytes(navMessage.NavigationMessage);
             byte[] signature = SignData(dataBytes, privateKey);
-            rsa.Signature = Convert.ToBase64String(signature);
-            _context.Data.Add(rsa);
-            await _context.SaveChangesAsync();           
+            navMessage.Signature = Convert.ToBase64String(signature);
+            _context.NavMessage.Add(navMessage);
+            await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetRsa", new { id = rsa.Id }, rsa);
+            return CreatedAtAction("GetNavMessage", new { id = navMessage.Id }, navMessage);
         }
 
-        // DELETE: api/Rsas/5
+        // DELETE: api/NavMessages/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRsa(int id)
+        public async Task<IActionResult> DeleteNavMessage(int id)
         {
-            var rsa = await _context.Data.FindAsync(id);
-            if (rsa == null)
+            var navMessage = await _context.NavMessage.FindAsync(id);
+            if (navMessage == null)
             {
                 return NotFound();
             }
 
-            _context.Data.Remove(rsa);
+            _context.NavMessage.Remove(navMessage);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool RsaExists(int id)
+        private bool NavMessageExists(int id)
         {
-            return _context.Data.Any(e => e.Id == id);
+            return _context.NavMessage.Any(e => e.Id == id);
         }
 
         // Function to sign data
@@ -144,16 +139,5 @@ namespace WebApplication1.Controllers
                 return rsa.SignData(data, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
             }
         }
-
-        // Function to verify signature
-        static bool VerifyData(byte[] data, byte[] signature, RSAParameters publicKey)
-        {
-            using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
-            {
-                rsa.ImportParameters(publicKey);
-                return rsa.VerifyData(data, signature, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
-            }
-        }
-
     }
 }

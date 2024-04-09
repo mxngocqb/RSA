@@ -11,8 +11,8 @@ using WebApplication1.Data;
 namespace WebApplication1.Migrations
 {
     [DbContext(typeof(WebApplication1Context))]
-    [Migration("20240402155836_Initial")]
-    partial class Initial
+    [Migration("20240409090221_ngocdb")]
+    partial class ngocdb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,7 +24,7 @@ namespace WebApplication1.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("WebApplication1.Models.Rsa", b =>
+            modelBuilder.Entity("WebApplication1.Models.NavMessage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -32,19 +32,27 @@ namespace WebApplication1.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Signature")
+                    b.Property<string>("NavigationMessage")
                         .IsRequired()
                         .HasMaxLength(2048)
                         .HasColumnType("nvarchar(2048)");
 
-                    b.Property<string>("Value")
-                        .IsRequired()
+                    b.Property<string>("Signature")
                         .HasMaxLength(2048)
                         .HasColumnType("nvarchar(2048)");
+
+                    b.Property<int>("SvId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Tow")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Week")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Data");
+                    b.ToTable("NavMessage");
                 });
 #pragma warning restore 612, 618
         }
