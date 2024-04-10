@@ -64,36 +64,36 @@ namespace WebApplication1.Controllers
             return navMessage;
         }
 
-        // PUT: api/NavMessages/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutNavMessage(int id, NavMessage navMessage)
-        {
-            if (id != navMessage.Id)
-            {
-                return BadRequest();
-            }
+        //// PUT: api/NavMessages/5
+        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> PutNavMessage(int id, NavMessage navMessage)
+        //{
+        //    if (id != navMessage.Id)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            _context.Entry(navMessage).State = EntityState.Modified;
+        //    _context.Entry(navMessage).State = EntityState.Modified;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!NavMessageExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!NavMessageExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
         // POST: api/NavMessages
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -109,21 +109,21 @@ namespace WebApplication1.Controllers
             return CreatedAtAction("GetNavMessage", new { id = navMessage.Id }, navMessage);
         }
 
-        // DELETE: api/NavMessages/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteNavMessage(int id)
-        {
-            var navMessage = await _context.NavMessage.FindAsync(id);
-            if (navMessage == null)
-            {
-                return NotFound();
-            }
+        //// DELETE: api/NavMessages/5
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> DeleteNavMessage(int id)
+        //{
+        //    var navMessage = await _context.NavMessage.FindAsync(id);
+        //    if (navMessage == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            _context.NavMessage.Remove(navMessage);
-            await _context.SaveChangesAsync();
+        //    _context.NavMessage.Remove(navMessage);
+        //    await _context.SaveChangesAsync();
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
         private bool NavMessageExists(int id)
         {
